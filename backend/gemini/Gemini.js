@@ -5,22 +5,26 @@ require('dotenv').config();
 let chat = null;
 
 exports.startChat = async () => {
-
-    if(chat !== null) return; 
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY});
-    chat = ai.chats.create({
-    model: "gemini-2.0-flash",
-    history: [
-        {
-        role: "user",
-        parts: [{ text: "Hello" }],
-        },
-        {
-        role: "model",
-        parts: [{ text: "Great to meet you. What would you like to know?" }],
-        },
-    ],
-    });
+    try {
+        if(chat !== null) return; 
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY});
+        chat = ai.chats.create({
+        model: "gemini-2.0-flash",
+        history: [
+            {
+            role: "user",
+            parts: [{ text: "Hello" }],
+            },
+            {
+            role: "model",
+            parts: [{ text: "Great to meet you. What would you like to know?" }],
+            },
+        ],
+        });
+    }
+    catch(err) {
+        console.log(err);
+    }
 }
 
 

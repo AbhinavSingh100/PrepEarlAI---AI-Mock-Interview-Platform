@@ -11,4 +11,19 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+export const fetchQuestions = async ( { role, experience, stack } ) => {
+    console.log(role, experience, stack);
+    const res = await API.post('/session/start', { role, experience, stack });
+    return res;
+}
+
+export const sendAnswer = async ( sessionId, questionIndex, answer ) => {
+    const res = await API.post('/session/answer', { sessionId, questionIndex, answer }); 
+    return res;
+}
+
+export const getFeedback = async ( sessionId ) => {
+    const res = await API.post('/session/end', { sessionId }); 
+    return res.data.feedback;
+}
 export default API;

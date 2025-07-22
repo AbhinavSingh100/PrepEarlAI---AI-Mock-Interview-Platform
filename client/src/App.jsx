@@ -1,7 +1,5 @@
 import { useState } from 'react'
 import './styles/App.css'
-import InterviewWindow from './pages/InterviewWindow'
-import Navbar from './components/NavBar'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'

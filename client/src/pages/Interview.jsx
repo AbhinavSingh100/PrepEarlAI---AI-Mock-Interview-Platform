@@ -17,17 +17,18 @@ import Button from '../components/Button';
 import WebCam from '../components/Webcam';
 import image from '../assets/interviewer.png'
 import useSpeechToText from 'react-hook-speech-to-text';
-import API from '../services/api.js';
+import { fetchQuestions, sendAnswer, getFeedback } from '../services/api.js';
 
 const Interview = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const interviewType = searchParams.get('type') || 'general';
-  //const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   //const [isRecording, setIsRecording] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(true);
   const [isMicOn, setIsMicOn] = useState(false);
+  const [sessionId, setSessionId] = useState('');
   //const [showSaveAnswerPopup, setShowSaveAnswerPopup] = useState(false);
   //const [isDictating, setIsDictating] = useState(false);
   // use "speechSynthesis.speaking" for "isDictating"
@@ -63,29 +64,24 @@ const Interview = () => {
       }
     }, [results])
 
-  const questions = {
-    technical: [
-      "Tell me about your experience with React and modern JavaScript frameworks.",
-      "How would you optimize a slow-performing web application?",
-      "Explain the concept of closure in JavaScript with an example.",
-      "Design a system to handle 1 million concurrent users.",
-      "What's the difference between SQL and NoSQL databases?"
-    ],
-    behavioral: [
-      "Tell me about a time when you had to work with a difficult team member.",
-      "Describe a situation where you had to learn something new quickly.",
-      "How do you handle stress and pressure in the workplace?",
-      "Tell me about a project you're particularly proud of.",
-      "Describe a time when you had to make a difficult decision."
-    ],
-    general: [
-      "Tell me about yourself and your background.",
-      "What interests you about this position?",
-      "What are your greatest strengths and weaknesses?",
-      "Where do you see yourself in 5 years?",
-      "Why should we hire you?"
-    ]
-  };
+ useEffect(() => {
+    const startInterview = async () => {
+      if( interviewStarted && !interviewCompleted){
+        try {
+          console.log( setupData );
+          const res = await fetchQuestions({ role: setupData.role, experience: setupData.experience, stack: setupData.stack });
+          console.log(res.data.questions);
+          setQuestions(res.data.questions);
+          setSessionId(res.data.sessionId);
+        } catch (err) {
+          console.error("Failed to start interview", err);
+          alert("Couldn't start interview");
+          navigate('/dashboard');
+        }
+      }
+    };
+    startInterview();
+  }, [interviewStarted]);
 
   const techStacks = [
     'JavaScript', 'React', 'Node.js', 'Python', 'Java', 'C++', 'TypeScript',
@@ -100,8 +96,6 @@ const Interview = () => {
     '7-10 years (Senior)',
     '10+ years (Lead/Principal)'
   ];
-
-  const currentQuestions = questions.technical;
 
   useEffect(() => {
     let interval;
@@ -121,7 +115,7 @@ const Interview = () => {
     if(interviewStarted && !interviewCompleted) {
       dictateCurrentQuestion(currentQuestionIndex);
     }
-  }, [currentQuestionIndex]);
+  }, [currentQuestionIndex, questions]);
 
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
@@ -142,14 +136,14 @@ const Interview = () => {
   }, [currentAnswer]);
 
   const dictateCurrentQuestion = (quesIndex) => {
-    if(currentQuestions.length > 0){ 
-      const utterance = new SpeechSynthesisUtterance(currentQuestions[quesIndex]);
-      console.log(currentQuestions[quesIndex]);
+    if(questions.length > 0){ 
+      const utterance = new SpeechSynthesisUtterance(questions[quesIndex]);
+      console.log(questions[quesIndex]);
       speechSynthesis.speak(utterance);
     } 
   }
 
-    const handleSetupSubmit = (e) => {
+  const handleSetupSubmit = (e) => {
     e.preventDefault();
     setSetupCompleted(true);
   };
@@ -208,19 +202,26 @@ const Interview = () => {
   //   setTempAnswer('');
   //   setShowSaveAnswerPopup(false);
   // }
+  const submitAnswer = async (ans) => {
+    const response = await sendAnswer(sessionId, currentQuestionIndex, ans);
+    console.log(response);
+  }
 
   const handleNextQuestion = () => {
     
-    if (currentQuestionIndex < currentQuestions.length - 1) {
+    if (currentQuestionIndex <= questions.length - 1) {
       if(tempAnswer === ''){
         return alert("Answer cannot be empty");
       }
       else{
         setCurrentAnswer(tempAnswer);
+        submitAnswer(tempAnswer);
       }
       setCurrentQuestionIndex(prev => prev + 1);
       setTempAnswer('');
-    } else {
+      results.length = 0;
+    } 
+    if(currentQuestionIndex === questions.length - 1) {
       handleCompleteInterview();
     }
   }; 
@@ -235,6 +236,19 @@ const Interview = () => {
   const handleCompleteInterview = () => {
     setInterviewCompleted(true);
   };
+
+  const handleFeedback = async () => {
+    try{
+      const feedback = await getFeedback(sessionId);
+      console.log(feedback);
+      navigate('/feedback', {
+        state: { feedback }
+      });
+    }
+    catch(error) {
+      console.log(error);
+    }
+  }
 
   const handleRetakeInterview = () => {
     setCurrentQuestionIndex(0);
@@ -277,7 +291,7 @@ const Interview = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button onClick={() => navigate('/dashboard')}>
+              <Button onClick={handleFeedback}>
                 View Detailed Analysis
               </Button>
               <Button variant="secondary" onClick={handleRetakeInterview}>
@@ -444,7 +458,7 @@ const Interview = () => {
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
-                      <span className="text-gray-600">{currentQuestions.length} carefully crafted questions</span>
+                      <span className="text-gray-600">{questions.length} carefully crafted questions</span>
                     </div>
                     <div className="flex items-start space-x-3">
                       <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
@@ -516,7 +530,14 @@ const Interview = () => {
     );
   }
 
- 
+  if(!questions) {
+    return (
+      <div className='flex w-screen h-screen justify-center items-center'>
+        Wait...
+
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -535,7 +556,7 @@ const Interview = () => {
                 {interviewType.charAt(0).toUpperCase() + interviewType.slice(1)} Interview
               </h1>
               <p className="text-gray-400 text-sm">
-                Question {currentQuestionIndex + 1} of {currentQuestions.length}
+                Question {currentQuestionIndex + 1} of {questions.length}
               </p>
             </div>
           </div>
@@ -611,7 +632,7 @@ const Interview = () => {
           <div className="bg-white rounded-xl p-6">
             <h3 className="font-semibold text-gray-900 mb-4">Current Question</h3>
             <p className="text-gray-700 leading-relaxed mb-6">
-              {currentQuestions[currentQuestionIndex]}
+              {questions[currentQuestionIndex]}
             </p>
 
             <div className="space-y-4">
@@ -637,7 +658,7 @@ const Interview = () => {
                   size="sm"
                   className="flex-1"
                 >
-                  {currentQuestionIndex === currentQuestions.length - 1 ? 'Finish' : 'Next'}
+                  {currentQuestionIndex === questions.length - 1 ? 'Finish' : 'Next'}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </div>
@@ -650,12 +671,12 @@ const Interview = () => {
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Questions</span>
-                <span>{currentQuestionIndex + 1} / {currentQuestions.length}</span>
+                <span>{currentQuestionIndex + 1} / {questions.length}</span>
               </div>
               <div className="w-full bg-gray-200 rounded-full h-2">
                 <div 
                   className="bg-purple-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${((currentQuestionIndex + 1) / currentQuestions.length) * 100}%` }}
+                  style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
                 ></div>
               </div>
             </div>

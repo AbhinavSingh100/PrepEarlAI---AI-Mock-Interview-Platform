@@ -7,7 +7,7 @@ const interviewSessionSchema = new mongoose.Schema({
         required: true
     },
     role: String,
-    experience: Number,
+    experience: String,
     stack: [String],
     questions: [String],
     answers: [String],
