@@ -14,7 +14,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import Button from '../components/Button';
-import WebCam from '../components/Webcam';
+import WebCam from '../components/WebCam';
 import image from '../assets/interviewer.png'
 import useSpeechToText from 'react-hook-speech-to-text';
 import { fetchQuestions, sendAnswer, getFeedback } from '../services/api.js';
