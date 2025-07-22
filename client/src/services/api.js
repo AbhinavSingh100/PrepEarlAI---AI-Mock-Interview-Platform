@@ -1,8 +1,9 @@
 // services/api.js
 import axios from 'axios';
 
+
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api', // or your deployed backend
+  baseURL: import.meta.env.VITE_SERVER_URL, // or your deployed backend
 });
 
 API.interceptors.request.use((config) => {

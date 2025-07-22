@@ -4,7 +4,7 @@ const app = express();
 require("dotenv").config();
 
 app.use(cors({
-  origin: 'http://localhost:5173', // your frontend URL
+  origin: process.env.CLIENT_URL, // your frontend URL
   credentials: true
 }));
 
