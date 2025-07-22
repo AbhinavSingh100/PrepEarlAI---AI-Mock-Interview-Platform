@@ -23,6 +23,7 @@ const Interview = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const interviewType = searchParams.get('type') || 'general';
+  //const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   //const [isRecording, setIsRecording] = useState(false);
   const [isCameraOn, setIsCameraOn] = useState(true);
