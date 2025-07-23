@@ -8,11 +8,9 @@ An AI-powered web application that simulates real-life interview scenarios, offe
 
 - ✨ **AI-Powered Questions & Feedback** — Uses OpenAI's LLMs to dynamically generate questions and analyze user responses.  
 - 🎤 **Speech Recognition & Dictation** — Records user answers using real-time speech-to-text with `react-hook-speech-to-text`.  
-- 🧠 **Interview Types** — Choose between Technical, Behavioral, or General interviews.  
 - 🧪 **Performance Summary** — End of interview feedback with clarity, confidence, and relevance scores.  
 - 🔐 **Authentication System** — Secure login and registration using JWT, bcrypt, and MongoDB Atlas.  
 - 💡 **Tech Stack Selection** — Users personalize interviews by selecting roles, experience level, and tech stacks.  
-- 📊 **Progress Tracker** — See question progress in real-time with timers and indicators.  
 - 🌐 **Deployed with Render** — Unified full-stack deployment with both frontend and backend in a single repo.  
 
 ---
@@ -33,7 +31,7 @@ An AI-powered web application that simulates real-life interview scenarios, offe
 - dotenv  
 
 ### **AI Integration**
-- OpenAI API for question generation and feedback  
+- Gemini API for question generation and feedback  
 
 ---
 
@@ -49,19 +47,26 @@ An AI-powered web application that simulates real-life interview scenarios, offe
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/ai-mock-interview.git
+git clone https://github.com/AbhinavSingh100/PrepEarlAI---AI-Mock-Interview-Platform.git
 cd ai-mock-interview
 ```
 
 ### 2. Setup Environment Variables
 
-Create a `.env` file inside the `/server` directory with the following:
+1. Create a `.env` file inside the `/server` directory with the following:
 
 ```ini
 PORT=port_number
+CLIENT_URL=your_client_url
 MONGO_URI=your_mongodb_atlas_url
 JWT_SECRET=your_secret_key
 GEMINI_API_KEY=your_gemini_api_key
+```
+
+2. Create a `.env` file inside the `/client` directory with the following:
+
+```ini
+VITE_SERVER_URL=your_server_url
 ```
 
 ### 3. Install Dependencies
@@ -107,11 +112,11 @@ npm run dev
 ## 📸 Screenshots
 
 <!-- Add screenshots or demo GIFs here -->
-<img width="1920" height="1080" alt="Screenshot (21)" src="https://github.com/user-attachments/assets/565a8a05-4e8a-4d2d-9653-73806d8b39cb" />
+<img width="1896" height="951" alt="Screenshot (22)" src="https://github.com/user-attachments/assets/dcc2710f-ae5a-4d43-907c-50c651464ac2" />
 
-<img width="1920" height="1080" alt="Screenshot (20)" src="https://github.com/user-attachments/assets/6052387a-17ff-4889-9ec5-61c662d5a608" />
+<img width="1920" height="948" alt="Screenshot (20)" src="https://github.com/user-attachments/assets/9167ca0b-78b9-4c9a-b80a-65166495c1a0" />
 
-<img width="1920" height="1080" alt="Screenshot (22)" src="https://github.com/user-attachments/assets/d18e9159-3751-4b50-802a-40fa76697bb0" />
+<img width="1893" height="944" alt="Screenshot (21)" src="https://github.com/user-attachments/assets/3b930b05-8992-4735-b271-eb649aa59ed9" />
 
 
 ---
@@ -121,8 +126,8 @@ npm run dev
 **Abhinav Singh**  
 _Aspiring Full-Stack Developer | AI Product Builder_  
 
-- [LinkedIn](https://www.linkedin.com/in/your-profile)  
-- [GitHub](https://github.com/your-username)
+- [LinkedIn](https://www.linkedin.com/in/abhinav-singh-529935223/)  
+- [GitHub](https://github.com/AbhinavSingh100)
 
 ---
 
