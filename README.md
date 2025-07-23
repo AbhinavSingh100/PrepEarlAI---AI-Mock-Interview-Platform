@@ -42,11 +42,8 @@ An AI-powered web application that simulates real-life interview scenarios, offe
 ```bash
 /client          # React frontend (Vite)
 /server          # Express backend (API, DB logic)
-/routes          # Protected route wrapper
-/models          # MongoDB models (User, InterviewSession)
-/services        # Axios service layer
-.env             # Environment variables
 
+```
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the Repo
