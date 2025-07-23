@@ -58,9 +58,10 @@ cd ai-mock-interview
 Create a `.env` file inside the `/server` directory with the following:
 
 ```ini
+PORT=port_number
 MONGO_URI=your_mongodb_atlas_url
 JWT_SECRET=your_secret_key
-OPENAI_API_KEY=your_openai_api_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### 3. Install Dependencies
@@ -81,7 +82,7 @@ Open two terminals and run:
 ```bash
 # Terminal 1 - Start backend
 cd server
-npm run dev
+node server.js
 ```
 
 ```bash
@@ -103,18 +104,15 @@ npm run dev
 
 ---
 
-## 🧠 Future Enhancements
-
-- ✅ AI scoring with deeper analytics and explanations  
-- ✅ Video recording + emotion analysis  
-- ✅ Admin dashboard to add/update question banks  
-- ✅ Interview history with downloadable reports  
-
----
-
 ## 📸 Screenshots
 
 <!-- Add screenshots or demo GIFs here -->
+<img width="1920" height="1080" alt="Screenshot (21)" src="https://github.com/user-attachments/assets/565a8a05-4e8a-4d2d-9653-73806d8b39cb" />
+
+<img width="1920" height="1080" alt="Screenshot (20)" src="https://github.com/user-attachments/assets/6052387a-17ff-4889-9ec5-61c662d5a608" />
+
+<img width="1920" height="1080" alt="Screenshot (22)" src="https://github.com/user-attachments/assets/d18e9159-3751-4b50-802a-40fa76697bb0" />
+
 
 ---
 
